@@ -4,6 +4,8 @@ import (
 	"fmt"
 
 	"github.com/bagusyanuar/go-olin-bags/app/config"
+	"github.com/bagusyanuar/go-olin-bags/app/http/builder"
+	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,10 +16,7 @@ func main() {
 	}
 
 	r := gin.Default()
-	r.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(200, gin.H{
-			"message": "success",
-		})
-	})
+	routers := builder.BuildRoute()
+	common.BuildRoute(r, routers)
 	r.Run(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port))
 }

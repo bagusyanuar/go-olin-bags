@@ -14,3 +14,13 @@ type User struct {
 	Roles    datatypes.JSON `gorm:"type:longtext;not null" json:"roles"`
 	common.WithTimestampsModel
 }
+
+type Agent struct {
+	ID      uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	UserID  uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_user_id;not null;" json:"user_id"`
+	Name    string    `gorm:"type:varchar(255);not null;" json:"name"`
+	Phone   string    `gorm:"type:varchar(25);" json:"phone"`
+	Address string    `gorm:"type:text" json:"address"`
+	common.WithTimestampsModel
+	User User `gorm:"foreignKey:UserID" json:"user"`
+}
