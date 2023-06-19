@@ -34,7 +34,7 @@ func (svc *AuthService) SignIn(request request.CreateSignInRequest) (accessToken
 	return common.CreateAccessToken(&svc.JWTConfig, &jwtSign)
 }
 
-func NewAuthService(jwtConfig config.JWT, authRepository repositories.Auth) Auth {
+func NewAuthService(authRepository repositories.Auth, jwtConfig config.JWT) Auth {
 	return &AuthService{
 		JWTConfig:      jwtConfig,
 		AuthRepository: authRepository,

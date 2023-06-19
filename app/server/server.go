@@ -25,15 +25,9 @@ func Serve(cfg *config.Config, db *gorm.DB) {
 		})
 	})
 
-	//build up route
-	api := server.Group("/api/v1")
+	//build up scheme & route
 	b := builder.NewBuilder(db, cfg)
-	b.Build()
-	b.CreateRoute(api)
-	// routes := builder.CreateRoute(cfg)
-	// for _, route := range routes {
-	// 	api.Handle(route.Method, route.Group+route.Path, route.Handler...)
-	// }
+	b.Build(server)
 
 	//listening server
 	listen := fmt.Sprintf("%s:%s", cfg.Host, cfg.Port)

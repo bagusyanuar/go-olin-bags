@@ -3,10 +3,8 @@ package builder
 import (
 	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/app/http/controller"
-	adminCtrl "github.com/bagusyanuar/go-olin-bags/app/http/controller/admin"
-	"github.com/bagusyanuar/go-olin-bags/app/repositories"
+	adminController "github.com/bagusyanuar/go-olin-bags/app/http/controller/admin"
 	adminRepo "github.com/bagusyanuar/go-olin-bags/app/repositories/admin"
-	"github.com/bagusyanuar/go-olin-bags/app/service"
 	adminSvc "github.com/bagusyanuar/go-olin-bags/app/service/admin"
 	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/bagusyanuar/go-olin-bags/router"
@@ -15,11 +13,22 @@ import (
 )
 
 type Builder struct {
-	DB                   *gorm.DB
-	Config               *config.Config
-	WelcomeController    *controller.WelcomeController
-	AuthController       *controller.AuthController
-	AgentAdminController *adminCtrl.AgentController
+	DB            *gorm.DB
+	Config        *config.Config
+	PublicBuilder publicBuilder
+	AdminBuilder  adminBuilder
+	// WelcomeController    *controller.WelcomeController
+	// AuthController       *controller.AuthController
+	// AgentAdminController *adminController.AgentController
+}
+
+type publicBuilder struct {
+	WelcomeController *controller.WelcomeController
+	AuthController    *controller.AuthController
+}
+
+type adminBuilder struct {
+	AgentController *adminController.AgentController
 }
 
 func NewBuilder(db *gorm.DB, cfg *config.Config) Builder {
@@ -29,47 +38,49 @@ func NewBuilder(db *gorm.DB, cfg *config.Config) Builder {
 	}
 }
 
-func (b *Builder) Build() {
-	authRepository := repositories.NewAuthRepository(b.DB)
-	agentRepository := adminRepo.NewAgentRepository(b.DB)
+func (b *Builder) Build(server *gin.Engine) {
+	api := server.Group("/api/v1")
 
-	authService := service.NewAuthService(b.Config.JWT, authRepository)
-	agentService := adminSvc.NewAgentService(agentRepository)
-
-	authController := controller.NewAuthController(authService)
-	b.AuthController = &authController
-
-	agentController := adminCtrl.NewAgentController(agentService)
-	b.AgentAdminController = &agentController
-
-	welcomeController := controller.NewWelcomeController(b.Config)
-	b.WelcomeController = &welcomeController
+	publicBuilder := NewPublicBuilder()
+	publicBuilder.BuildPublicSheme(b.DB, b.Config, api)
+	// b.buildPublicScheme()
+	// b.buildAdminScheme()
+	// b.createRoute(api)
 }
 
-func (b *Builder) CreateRoute(group *gin.RouterGroup) {
-	routes := b.routers()
-	for _, route := range routes {
-		group.Handle(route.Method, route.Group+route.Path, route.Handler...)
+func (b *Builder) buildAdminScheme() {
+	agentRepository := adminRepo.NewAgentRepository(b.DB)
+
+	agentService := adminSvc.NewAgentService(agentRepository)
+
+	agentController := adminController.NewAgentController(agentService)
+	b.AdminBuilder.AgentController = &agentController
+}
+
+func (b *Builder) createRoute(group *gin.RouterGroup) {
+	//creating public routes
+	publicRoutes := b.createPublicRoutes()
+	for _, publicRoute := range publicRoutes {
+		group.Handle(publicRoute.Method, publicRoute.Group+publicRoute.Path, publicRoute.Handler)
+	}
+
+	//creating admin routes
+	adminRoutes := b.createAdminRoutes()
+	apiAdmin := group.Group("/admin")
+	for _, adminRoute := range adminRoutes {
+		apiAdmin.Handle(adminRoute.Method, adminRoute.Group+adminRoute.Path, adminRoute.Handler)
 	}
 }
 
-func (b *Builder) routers() []*common.Route {
-	return router.Routers(
-		b.WelcomeController,
-		b.AuthController,
-		b.AgentAdminController,
+func (b *Builder) createPublicRoutes() []*common.Route {
+	return router.PublicRoutes(
+		b.PublicBuilder.WelcomeController,
+		b.PublicBuilder.AuthController,
 	)
 }
 
-// func (b *Builder) CreateRoute() []*common.Route {
-// 	return router.Routers(
-// 		b.WelcomeController,
-// 	)
-// }
-
-// func CreateRoute(cfg *config.Config) []*common.Route {
-// 	welcomeController := controller.NewWelcomeController(cfg)
-// 	return router.Routers(
-// 		&welcomeController,
-// 	)
-// }
+func (b *Builder) createAdminRoutes() []*common.Route {
+	return router.AdminRoutes(
+		b.AdminBuilder.AgentController,
+	)
+}
