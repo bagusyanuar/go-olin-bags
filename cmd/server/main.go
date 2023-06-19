@@ -1,12 +1,8 @@
 package main
 
 import (
-	"fmt"
-
 	"github.com/bagusyanuar/go-olin-bags/app/config"
-	"github.com/bagusyanuar/go-olin-bags/app/http/builder"
-	"github.com/bagusyanuar/go-olin-bags/common"
-	"github.com/gin-gonic/gin"
+	"github.com/bagusyanuar/go-olin-bags/app/server"
 )
 
 func main() {
@@ -15,8 +11,9 @@ func main() {
 		panic(err)
 	}
 
-	r := gin.Default()
-	routers := builder.BuildRoute()
-	common.BuildRoute(r, routers)
-	r.Run(fmt.Sprintf("%s:%s", cfg.Host, cfg.Port))
+	db, err := config.NewMySQLConnection(&cfg.MySQL)
+	if err != nil {
+		panic(err)
+	}
+	server.Serve(cfg, db)
 }
