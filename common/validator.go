@@ -34,6 +34,8 @@ func customMessage(tag string) string {
 	switch tag {
 	case "required":
 		return "Field is required"
+	case "len":
+		return "Field must be ... character"
 	}
-	return "error field"
+	return "unknown error"
 }
