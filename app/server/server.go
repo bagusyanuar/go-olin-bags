@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/app/http/builder"
+	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )

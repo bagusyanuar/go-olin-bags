@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/app/server"
+	"github.com/bagusyanuar/go-olin-bags/config"
 )
 
 func main() {

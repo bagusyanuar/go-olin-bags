@@ -8,11 +8,13 @@ import (
 )
 
 const (
-	AgentPath = "/agent"
+	AgentPath    = "/agent"
+	ProvincePath = "/province"
 )
 
 func AdminRoutes(
 	agentController *controller.AgentController,
+	provinceController *controller.ProvinceController,
 ) []*common.Route {
 	return []*common.Route{
 		{
@@ -26,6 +28,12 @@ func AdminRoutes(
 			Group:   AgentPath,
 			Path:    "/:id",
 			Handler: agentController.FindByID,
+		},
+		{
+			Method:  http.MethodPost,
+			Group:   ProvincePath,
+			Path:    "/",
+			Handler: provinceController.Create,
 		},
 	}
 }

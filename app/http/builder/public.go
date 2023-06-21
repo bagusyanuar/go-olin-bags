@@ -1,11 +1,11 @@
 package builder
 
 import (
-	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/app/http/controller"
 	"github.com/bagusyanuar/go-olin-bags/app/repositories"
 	"github.com/bagusyanuar/go-olin-bags/app/service"
 	"github.com/bagusyanuar/go-olin-bags/common"
+	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/bagusyanuar/go-olin-bags/router"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"

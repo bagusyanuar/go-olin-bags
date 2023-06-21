@@ -4,8 +4,8 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/cmd/database/migrations"
+	"github.com/bagusyanuar/go-olin-bags/config"
 )
 
 func main() {

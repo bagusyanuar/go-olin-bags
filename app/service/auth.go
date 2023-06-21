@@ -1,10 +1,10 @@
 package service
 
 import (
-	"github.com/bagusyanuar/go-olin-bags/app/config"
 	"github.com/bagusyanuar/go-olin-bags/app/http/request"
 	"github.com/bagusyanuar/go-olin-bags/app/repositories"
 	"github.com/bagusyanuar/go-olin-bags/common"
+	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/bagusyanuar/go-olin-bags/model"
 )
 

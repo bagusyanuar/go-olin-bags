@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"github.com/bagusyanuar/go-olin-bags/app/config"
+	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/gin-gonic/gin"
 )
 

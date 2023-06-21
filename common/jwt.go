@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/bagusyanuar/go-olin-bags/app/config"
+	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 )
