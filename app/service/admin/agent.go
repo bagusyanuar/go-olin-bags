@@ -7,10 +7,16 @@ import (
 
 type Agent interface {
 	FindAll() ([]model.Agent, error)
+	FindByID(id string) (*model.Agent, error)
 }
 
 type AgentService struct {
 	AgentRepository adminRepository.Agent
+}
+
+// FindByID implements Agent.
+func (svc *AgentService) FindByID(id string) (*model.Agent, error) {
+	return svc.AgentRepository.FindByID(id)
 }
 
 // FindAll implements Agent.

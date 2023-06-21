@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Agent struct {
+type ProductionHouse struct {
 	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"user_id"`
 	CityID    uuid.UUID `json:"city_id"`
@@ -17,19 +17,18 @@ type Agent struct {
 	Address   string    `json:"address"`
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
-	Balance   float64   `json:"balance"`
 	User      User      `gorm:"foreignKey:UserID" json:"user"`
 	City      City      `gorm:"foreignKey:CityID" json:"city"`
 	common.WithTimestampsModel
 }
 
-func (agent *Agent) BeforeCreate(tx *gorm.DB) (err error) {
-	agent.ID = uuid.New()
-	agent.CreatedAt = time.Now()
-	agent.UpdatedAt = time.Now()
+func (productionHouse *ProductionHouse) BeforeCreate(tx *gorm.DB) (err error) {
+	productionHouse.ID = uuid.New()
+	productionHouse.CreatedAt = time.Now()
+	productionHouse.UpdatedAt = time.Now()
 	return
 }
 
-func (Agent) TableName() string {
-	return common.AgentTableName
+func (ProductionHouse) TableName() string {
+	return common.ProductionHouseTableName
 }

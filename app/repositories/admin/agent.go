@@ -7,10 +7,20 @@ import (
 
 type Agent interface {
 	FindAll() ([]model.Agent, error)
+	FindByID(id string) (*model.Agent, error)
 }
 
 type AgentRepository struct {
 	Database *gorm.DB
+}
+
+// FindByID implements Agent.
+func (r *AgentRepository) FindByID(id string) (*model.Agent, error) {
+	var data *model.Agent
+	if err := r.Database.Debug().First(&data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
 }
 
 // FindAll implements Agent.

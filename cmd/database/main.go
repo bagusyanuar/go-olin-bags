@@ -26,7 +26,12 @@ func main() {
 	// 	return
 	case "migrate":
 		migrations.Migrate(db)
+		fmt.Println("successfully migrating database")
 		return
+	case "fresh":
+		migrations.Drop(db)
+		migrations.Migrate(db)
+		fmt.Println("successfully fresh database")
 	default:
 		fmt.Println("unknown command")
 		return

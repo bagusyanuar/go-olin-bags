@@ -6,9 +6,13 @@ import (
 	"gorm.io/gorm"
 )
 
+// table name constant
 const (
-	UserTableName  = "users"
-	AgentTableName = "agents"
+	UserTableName            = "users"
+	ProvinceTableName        = "provinces"
+	CityTableName            = "cities"
+	ProductionHouseTableName = "production_houses"
+	AgentTableName           = "agents"
 )
 
 type WithTimestampsModel struct {

@@ -16,10 +16,10 @@ type PublicBuilder struct {
 	AuthController    *controller.AuthController
 }
 
-func NewPublicBuilder() publicBuilder {
-	return publicBuilder{}
+func NewPublicBuilder() PublicBuilder {
+	return PublicBuilder{}
 }
-func (b *publicBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group *gin.RouterGroup) {
+func (b *PublicBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group *gin.RouterGroup) {
 	authRepository := repositories.NewAuthRepository(db)
 	authservice := service.NewAuthService(authRepository, cfg.JWT)
 	authController := controller.NewAuthController(authservice)
@@ -27,14 +27,14 @@ func (b *publicBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group 
 	b.createRoutes(group)
 }
 
-func (b *publicBuilder) createRoutes(group *gin.RouterGroup) {
+func (b *PublicBuilder) createRoutes(group *gin.RouterGroup) {
 	routes := b.routes()
 	for _, route := range routes {
 		group.Handle(route.Method, route.Group+route.Path, route.Handler)
 	}
 }
 
-func (b *publicBuilder) routes() []*common.Route {
+func (b *PublicBuilder) routes() []*common.Route {
 	return router.PublicRoutes(
 		b.WelcomeController,
 		b.AuthController,

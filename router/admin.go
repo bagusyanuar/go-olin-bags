@@ -21,5 +21,11 @@ func AdminRoutes(
 			Path:    "/",
 			Handler: agentController.FindAll,
 		},
+		{
+			Method:  http.MethodGet,
+			Group:   AgentPath,
+			Path:    "/:id",
+			Handler: agentController.FindByID,
+		},
 	}
 }
