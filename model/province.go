@@ -12,6 +12,7 @@ type Province struct {
 	ID   uuid.UUID `json:"id"`
 	Code string    `json:"code"`
 	Name string    `json:"name"`
+	City []City    `gorm:"foreignKey=ProvinceID" json:"cities"`
 	common.WithTimestampsModel
 }
 

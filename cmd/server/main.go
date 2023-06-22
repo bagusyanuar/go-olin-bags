@@ -15,5 +15,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	if cfg.AppMode == "dev" {
+		db = db.Debug()
+	}
 	server.Serve(cfg, db)
 }

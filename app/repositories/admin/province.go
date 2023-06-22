@@ -22,7 +22,7 @@ type ProvinceRepository struct {
 
 // Delete implements Province.
 func (r *ProvinceRepository) Delete(id string) error {
-	if err := r.Database.Debug().Where("id = ?", id).Delete(&model.Province{}).Error; err != nil {
+	if err := r.Database.Where("id = ?", id).Delete(&model.Province{}).Error; err != nil {
 		return err
 	}
 	return nil
@@ -30,7 +30,7 @@ func (r *ProvinceRepository) Delete(id string) error {
 
 // Patch implements Province.
 func (r *ProvinceRepository) Patch(id string, entity model.Province) error {
-	if err := r.Database.Debug().
+	if err := r.Database.
 		Omit(clause.Associations).
 		Where("id = ?", id).
 		Updates(entity).
@@ -42,7 +42,7 @@ func (r *ProvinceRepository) Patch(id string, entity model.Province) error {
 
 // Create implements Province.
 func (r *ProvinceRepository) Create(entity model.Province) error {
-	if err := r.Database.Debug().
+	if err := r.Database.
 		Omit(clause.Associations).
 		Create(&entity).
 		Error; err != nil {
@@ -54,8 +54,10 @@ func (r *ProvinceRepository) Create(entity model.Province) error {
 // FindAll implements Province.
 func (r *ProvinceRepository) FindAll(q string, limit, offset int) ([]model.Province, error) {
 	var data []model.Province
-	if err := r.Database.Debug().
+	if err := r.Database.
 		Where("name Like ?", "%"+q+"%").
+		Preload("City").
+		Order("name ASC").
 		Limit(limit).
 		Offset(offset).
 		Find(&data).
@@ -68,7 +70,7 @@ func (r *ProvinceRepository) FindAll(q string, limit, offset int) ([]model.Provi
 // FindByID implements Province.
 func (r *ProvinceRepository) FindByID(id string) (*model.Province, error) {
 	data := new(model.Province)
-	if err := r.Database.Debug().
+	if err := r.Database.
 		Where("id = ?", id).
 		First(&data).
 		Error; err != nil {

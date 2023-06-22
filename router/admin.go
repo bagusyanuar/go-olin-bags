@@ -29,11 +29,25 @@ func AdminRoutes(
 			Path:    "/:id",
 			Handler: agentController.FindByID,
 		},
+
+		//province route
+		{
+			Method:  http.MethodGet,
+			Group:   ProvincePath,
+			Path:    "/",
+			Handler: provinceController.FindAll,
+		},
 		{
 			Method:  http.MethodPost,
 			Group:   ProvincePath,
 			Path:    "/",
 			Handler: provinceController.Create,
+		},
+		{
+			Method:  http.MethodGet,
+			Group:   ProvincePath,
+			Path:    "/:id",
+			Handler: provinceController.FindByID,
 		},
 	}
 }
