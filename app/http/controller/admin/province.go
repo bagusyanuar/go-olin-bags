@@ -18,6 +18,15 @@ func NewProvinceController(provinceService service.Province) ProvinceController 
 	return ProvinceController{ProvinceService: provinceService}
 }
 
+func (c *ProvinceController) RegisterRoutes(endpointGroup *gin.RouterGroup) {
+	route := endpointGroup.Group("/province")
+	{
+		route.GET("/", c.FindAll)
+		route.POST("/", c.Create)
+		route.GET("/:id", c.FindByID)
+	}
+}
+
 func (c *ProvinceController) FindAll(ctx *gin.Context) {
 	q := ctx.Query("q")
 	limit, _ := strconv.Atoi(ctx.Query("limit"))

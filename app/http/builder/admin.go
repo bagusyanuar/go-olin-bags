@@ -4,9 +4,7 @@ import (
 	controller "github.com/bagusyanuar/go-olin-bags/app/http/controller/admin"
 	repository "github.com/bagusyanuar/go-olin-bags/app/repositories/admin"
 	service "github.com/bagusyanuar/go-olin-bags/app/service/admin"
-	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/bagusyanuar/go-olin-bags/config"
-	"github.com/bagusyanuar/go-olin-bags/router"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -20,7 +18,7 @@ func NewAdminBuilder() AdminBuilder {
 	return AdminBuilder{}
 }
 
-func (b *AdminBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group *gin.RouterGroup) {
+func (b *AdminBuilder) BuildScheme(db *gorm.DB, cfg *config.Config, endpointGroup *gin.RouterGroup) {
 	agentRepository := repository.NewAgentRepository(db)
 	provinceRepository := repository.NewProvinceReposiotry(db)
 
@@ -30,20 +28,23 @@ func (b *AdminBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group *
 	agentController := controller.NewAgentController(agentService)
 	b.AgentController = &agentController
 	provinceController := controller.NewProvinceController(provinceService)
-	b.ProvinceController = &provinceController
-	b.createRoutes(group)
+	provinceController.RegisterRoutes(endpointGroup)
+
+	// cityController := controller.NewCityController()
+	// b.ProvinceController = &provinceController
+	// b.createRoutes(group)
 }
 
-func (b *AdminBuilder) routes() []*common.Route {
-	return router.AdminRoutes(
-		b.AgentController,
-		b.ProvinceController,
-	)
-}
+// func (b *AdminBuilder) routes() []*common.Route {
+// 	return router.AdminRoutes(
+// 		b.AgentController,
+// 		b.ProvinceController,
+// 	)
+// }
 
-func (b *AdminBuilder) createRoutes(group *gin.RouterGroup) {
-	routes := b.routes()
-	for _, route := range routes {
-		group.Handle(route.Method, route.Group+route.Path, route.Handler)
-	}
-}
+// func (b *AdminBuilder) createRoutes(group *gin.RouterGroup) {
+// 	routes := b.routes()
+// 	for _, route := range routes {
+// 		group.Handle(route.Method, route.Group+route.Path, route.Handler)
+// 	}
+// }
