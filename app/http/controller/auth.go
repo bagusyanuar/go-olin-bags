@@ -12,11 +12,20 @@ import (
 
 type AuthController struct {
 	AuthService service.Auth
+	APIGroup    *gin.RouterGroup
 }
 
-func NewAuthController(authService service.Auth) AuthController {
+func NewAuthController(authService service.Auth, apiGroup *gin.RouterGroup) AuthController {
 	return AuthController{
 		AuthService: authService,
+		APIGroup:    apiGroup,
+	}
+}
+
+func (c *AuthController) RegisterRoutes() {
+	route := c.APIGroup.Group("/auth")
+	{
+		route.POST("/", c.SignIn)
 	}
 }
 

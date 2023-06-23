@@ -13,8 +13,8 @@ type City struct {
 	ProvinceID uuid.UUID `json:"province_id"`
 	Code       string    `json:"code"`
 	Name       string    `json:"name"`
-	Province   Province  `gorm:"foreignKey:ProvinceID" json:"province"`
 	common.WithTimestampsModel
+	Province *Province `gorm:"foreignKey:ProvinceID" json:"province"`
 }
 
 func (city *City) BeforeCreate(tx *gorm.DB) (err error) {

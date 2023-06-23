@@ -12,14 +12,15 @@ import (
 
 type ProvinceController struct {
 	ProvinceService service.Province
+	APIGroup        *gin.RouterGroup
 }
 
-func NewProvinceController(provinceService service.Province) ProvinceController {
-	return ProvinceController{ProvinceService: provinceService}
+func NewProvinceController(provinceService service.Province, apiGroup *gin.RouterGroup) ProvinceController {
+	return ProvinceController{ProvinceService: provinceService, APIGroup: apiGroup}
 }
 
-func (c *ProvinceController) RegisterRoutes(endpointGroup *gin.RouterGroup) {
-	route := endpointGroup.Group("/province")
+func (c *ProvinceController) RegisterRoutes() {
+	route := c.APIGroup.Group("/province")
 	{
 		route.GET("/", c.FindAll)
 		route.POST("/", c.Create)

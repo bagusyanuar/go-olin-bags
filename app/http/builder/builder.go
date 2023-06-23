@@ -20,11 +20,12 @@ func NewBuilder(db *gorm.DB, cfg *config.Config) Builder {
 
 func (b *Builder) Build(server *gin.Engine) {
 	api := server.Group("/api/v1")
+	publicGroup := api.Group("/")
 	adminGroup := api.Group("/admin")
 
-	publicBuilder := NewPublicBuilder()
-	publicBuilder.BuildPublicSheme(b.DB, b.Config, api)
+	publicBuilder := NewPublicBuilder(b.DB, b.Config, publicGroup)
+	publicBuilder.BuildScheme()
 
-	adminBuilder := NewAdminBuilder()
-	adminBuilder.BuildScheme(b.DB, b.Config, adminGroup)
+	adminBuilder := NewAdminBuilder(b.DB, b.Config, adminGroup)
+	adminBuilder.BuildScheme()
 }

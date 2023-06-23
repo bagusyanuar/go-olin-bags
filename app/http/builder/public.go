@@ -6,37 +6,34 @@ import (
 	"github.com/bagusyanuar/go-olin-bags/app/service"
 	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/bagusyanuar/go-olin-bags/config"
-	"github.com/bagusyanuar/go-olin-bags/router"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type PublicBuilder struct {
-	WelcomeController *controller.WelcomeController
-	AuthController    *controller.AuthController
+	Database *gorm.DB
+	Config   *config.Config
+	APIGroup *gin.RouterGroup
 }
 
-func NewPublicBuilder() PublicBuilder {
-	return PublicBuilder{}
-}
-func (b *PublicBuilder) BuildPublicSheme(db *gorm.DB, cfg *config.Config, group *gin.RouterGroup) {
-	authRepository := repositories.NewAuthRepository(db)
-	authservice := service.NewAuthService(authRepository, cfg.JWT)
-	authController := controller.NewAuthController(authservice)
-	b.AuthController = &authController
-	b.createRoutes(group)
-}
-
-func (b *PublicBuilder) createRoutes(group *gin.RouterGroup) {
-	routes := b.routes()
-	for _, route := range routes {
-		group.Handle(route.Method, route.Group+route.Path, route.Handler)
+func NewPublicBuilder(
+	database *gorm.DB,
+	config *config.Config,
+	apiGroup *gin.RouterGroup,
+) PublicBuilder {
+	return PublicBuilder{
+		Database: database,
+		Config:   config,
+		APIGroup: apiGroup,
 	}
 }
+func (b *PublicBuilder) BuildScheme() {
+	authRepository := repositories.NewAuthRepository(b.Database)
+	authservice := service.NewAuthService(authRepository, b.Config.JWT)
+	authController := controller.NewAuthController(authservice, b.APIGroup)
 
-func (b *PublicBuilder) routes() []*common.Route {
-	return router.PublicRoutes(
-		b.WelcomeController,
-		b.AuthController,
-	)
+	controllers := []any{
+		&authController,
+	}
+	common.RegisterRoutes(controllers...)
 }

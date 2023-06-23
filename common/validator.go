@@ -36,6 +36,8 @@ func customMessage(tag string) string {
 		return "Field is required"
 	case "len":
 		return "Field must be ... character"
+	case "uuid4":
+		return "Field must be uuid string type"
 	}
 	return "unknown error"
 }
