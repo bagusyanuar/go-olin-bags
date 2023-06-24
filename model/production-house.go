@@ -17,9 +17,9 @@ type ProductionHouse struct {
 	Address   string    `json:"address"`
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
-	User      User      `gorm:"foreignKey:UserID" json:"user"`
-	City      City      `gorm:"foreignKey:CityID" json:"city"`
 	common.WithTimestampsModel
+	User User `gorm:"foreignKey:UserID" json:"user"`
+	City City `gorm:"foreignKey:CityID" json:"city"`
 }
 
 func (productionHouse *ProductionHouse) BeforeCreate(tx *gorm.DB) (err error) {
