@@ -8,6 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	AgentTableName = "agents"
+)
+
 type Agent struct {
 	ID        uuid.UUID `json:"id"`
 	UserID    uuid.UUID `json:"user_id"`
@@ -18,9 +22,9 @@ type Agent struct {
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
 	Balance   float64   `json:"balance"`
-	User      User      `gorm:"foreignKey:UserID" json:"user"`
-	City      City      `gorm:"foreignKey:CityID" json:"city"`
 	common.WithTimestampsModel
+	User User `gorm:"foreignKey:UserID" json:"user"`
+	City City `gorm:"foreignKey:CityID" json:"city"`
 }
 
 func (agent *Agent) BeforeCreate(tx *gorm.DB) (err error) {
@@ -31,5 +35,5 @@ func (agent *Agent) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (Agent) TableName() string {
-	return common.AgentTableName
+	return AgentTableName
 }

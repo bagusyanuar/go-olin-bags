@@ -43,7 +43,7 @@ func (c *ProductionHouseController) Create(ctx *gin.Context) {
 		return
 	}
 
-	err := c.ProductionHouseService.Create(req)
+	data, err := c.ProductionHouseService.Create(req)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -55,6 +55,6 @@ func (c *ProductionHouseController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, common.APIResponse{
 		Code:    http.StatusCreated,
 		Message: "success",
-		Data:    req,
+		Data:    data,
 	})
 }

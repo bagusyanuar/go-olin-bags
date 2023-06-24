@@ -14,7 +14,7 @@ import (
 type ProductionHouse interface {
 	FindAll(q string, limit, offset int) ([]model.ProductionHouse, error)
 	FindByID(id string) (*model.ProductionHouse, error)
-	Create(request request.ProductionHouseRequest) error
+	Create(request request.ProductionHouseRequest) (*model.ProductionHouse, error)
 	Patch(id string, request request.ProductionHouseRequest) error
 	Delete(id string)
 }
@@ -24,20 +24,20 @@ type ProductionHouseService struct {
 }
 
 // Create implements ProductionHouse.
-func (svc *ProductionHouseService) Create(request request.ProductionHouseRequest) error {
+func (svc *ProductionHouseService) Create(request request.ProductionHouseRequest) (*model.ProductionHouse, error) {
 
 	if request.Password == "" {
-		return errors.New("password cannot empty")
+		return nil, errors.New("password cannot empty")
 	}
 
 	hash, err := bcrypt.GenerateFromPassword([]byte(request.Password), 13)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	password := string(hash)
 
 	roles, _ := json.Marshal([]string{"production-house"})
-	eUser := model.User{
+	user := model.User{
 		Email:    request.Email,
 		Username: request.Username,
 		Password: &password,
@@ -46,18 +46,19 @@ func (svc *ProductionHouseService) Create(request request.ProductionHouseRequest
 
 	cityID, err := uuid.Parse(request.CityID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	eProductionHouse := model.ProductionHouse{
+	e := model.ProductionHouse{
 		CityID:    cityID,
 		Name:      request.Name,
 		Phone:     request.Phone,
 		Address:   request.Address,
 		Latitude:  request.Latitude,
 		Longitude: request.Longitude,
+		User:      &user,
 	}
-	return svc.ProductionHouseRepository.Create(eUser, eProductionHouse)
+	return svc.ProductionHouseRepository.Create(e)
 }
 
 // Delete implements ProductionHouse.

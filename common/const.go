@@ -12,7 +12,6 @@ const (
 	ProvinceTableName        = "provinces"
 	CityTableName            = "cities"
 	ProductionHouseTableName = "production_houses"
-	AgentTableName           = "agents"
 )
 
 const (

@@ -3,13 +3,12 @@ package admin
 import (
 	"github.com/bagusyanuar/go-olin-bags/model"
 	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
 )
 
 type ProductionHouse interface {
 	FindAll(q string, limit, offset int) ([]model.ProductionHouse, error)
 	FindByID(id string) (*model.ProductionHouse, error)
-	Create(entityUser model.User, entityProductionHouse model.ProductionHouse) error
+	Create(entity model.ProductionHouse) (*model.ProductionHouse, error)
 }
 
 type ProductionHouseRepository struct {
@@ -17,7 +16,7 @@ type ProductionHouseRepository struct {
 }
 
 // Create implements ProductionHouse.
-func (r *ProductionHouseRepository) Create(entityUser model.User, entityProductionHouse model.ProductionHouse) error {
+func (r *ProductionHouseRepository) Create(entity model.ProductionHouse) (*model.ProductionHouse, error) {
 	tx := r.Database.Begin()
 	defer func() {
 		if rcr := recover(); rcr != nil {
@@ -26,22 +25,22 @@ func (r *ProductionHouseRepository) Create(entityUser model.User, entityProducti
 		}
 	}()
 
-	if err := tx.Omit(clause.Associations).
-		Create(&entityUser).
-		Error; err != nil {
-		return err
-	}
+	// if err := tx.Omit(clause.Associations).
+	// 	Create(&entityUser).
+	// 	Error; err != nil {
+	// 	return err
+	// }
 
-	user := entityUser
-	entityProductionHouse.UserID = user.ID
-	if err := tx.Omit(clause.Associations).
-		Create(&entityProductionHouse).
+	// user := entityUser
+	// entityProductionHouse.UserID = user.ID
+	if err := tx.Omit("City").
+		Create(&entity).
 		Error; err != nil {
 		tx.Rollback()
-		return err
+		return nil, err
 	}
 	tx.Commit()
-	return nil
+	return &entity, nil
 }
 
 // FindAll implements ProductionHouse.
