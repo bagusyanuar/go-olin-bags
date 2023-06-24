@@ -1,9 +1,14 @@
 package admin
 
 import (
+	"encoding/json"
+	"errors"
+
 	request "github.com/bagusyanuar/go-olin-bags/app/http/request/admin"
 	repository "github.com/bagusyanuar/go-olin-bags/app/repositories/admin"
 	"github.com/bagusyanuar/go-olin-bags/model"
+	"github.com/google/uuid"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type ProductionHouse interface {
@@ -20,7 +25,39 @@ type ProductionHouseService struct {
 
 // Create implements ProductionHouse.
 func (svc *ProductionHouseService) Create(request request.ProductionHouseRequest) error {
-	panic("unimplemented")
+
+	if request.Password == "" {
+		return errors.New("password cannot empty")
+	}
+
+	hash, err := bcrypt.GenerateFromPassword([]byte(request.Password), 13)
+	if err != nil {
+		return err
+	}
+	password := string(hash)
+
+	roles, _ := json.Marshal([]string{"production-house"})
+	eUser := model.User{
+		Email:    request.Email,
+		Username: request.Username,
+		Password: &password,
+		Roles:    roles,
+	}
+
+	cityID, err := uuid.Parse(request.CityID)
+	if err != nil {
+		return err
+	}
+
+	eProductionHouse := model.ProductionHouse{
+		CityID:    cityID,
+		Name:      request.Name,
+		Phone:     request.Phone,
+		Address:   request.Address,
+		Latitude:  request.Latitude,
+		Longitude: request.Longitude,
+	}
+	return svc.ProductionHouseRepository.Create(eUser, eProductionHouse)
 }
 
 // Delete implements ProductionHouse.

@@ -9,7 +9,7 @@ import (
 type ProductionHouse interface {
 	FindAll(q string, limit, offset int) ([]model.ProductionHouse, error)
 	FindByID(id string) (*model.ProductionHouse, error)
-	Create(entity model.ProductionHouse) error
+	Create(entityUser model.User, entityProductionHouse model.ProductionHouse) error
 }
 
 type ProductionHouseRepository struct {
@@ -17,13 +17,30 @@ type ProductionHouseRepository struct {
 }
 
 // Create implements ProductionHouse.
-func (r *ProductionHouseRepository) Create(entity model.ProductionHouse) error {
-	if err := r.Database.
-		Omit(clause.Associations).
-		Create(&entity).
+func (r *ProductionHouseRepository) Create(entityUser model.User, entityProductionHouse model.ProductionHouse) error {
+	tx := r.Database.Begin()
+	defer func() {
+		if rcr := recover(); rcr != nil {
+			tx.Rollback()
+			return
+		}
+	}()
+
+	if err := tx.Omit(clause.Associations).
+		Create(&entityUser).
 		Error; err != nil {
 		return err
 	}
+
+	user := entityUser
+	entityProductionHouse.UserID = user.ID
+	if err := tx.Omit(clause.Associations).
+		Create(&entityProductionHouse).
+		Error; err != nil {
+		tx.Rollback()
+		return err
+	}
+	tx.Commit()
 	return nil
 }
 

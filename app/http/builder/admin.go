@@ -32,19 +32,23 @@ func (b *AdminBuilder) BuildScheme() {
 	agentRepository := repository.NewAgentRepository(b.Database)
 	provinceRepository := repository.NewProvinceReposiotry(b.Database)
 	cityRepository := repository.NewCityRepository(b.Database)
+	productionHouseRepository := repository.NewProductionHouseRepository(b.Database)
 
 	agentService := service.NewAgentService(agentRepository)
 	provinceService := service.NewProvinceService(provinceRepository)
 	cityService := service.NewCityService(cityRepository)
+	productionHouseService := service.NewProductionHouseService(productionHouseRepository)
 
 	agentController := controller.NewAgentController(agentService)
 	provinceController := controller.NewProvinceController(provinceService, b.APIGroup)
 	cityController := controller.NewCityController(cityService, b.APIGroup)
+	productionHouseController := controller.NewProductionHouseController(productionHouseService, b.APIGroup)
 
 	controllers := []any{
 		&agentController,
 		&provinceController,
 		&cityController,
+		&productionHouseController,
 	}
 	common.RegisterRoutes(controllers...)
 }
