@@ -22,6 +22,7 @@ func (b *Builder) Build(server *gin.Engine) {
 	api := server.Group("/api/v1")
 	publicGroup := api.Group("/")
 	adminGroup := api.Group("/admin")
+	productionHouseGroup := api.Group("/production-house")
 	agentGroup := api.Group("/agent")
 
 	publicBuilder := NewPublicBuilder(b.DB, b.Config, publicGroup)
@@ -29,6 +30,9 @@ func (b *Builder) Build(server *gin.Engine) {
 
 	adminBuilder := NewAdminBuilder(b.DB, b.Config, adminGroup)
 	adminBuilder.BuildScheme()
+
+	productionHouseBuilder := NewProductionHouseBuilder(b.DB, b.Config, productionHouseGroup)
+	productionHouseBuilder.BuildScheme()
 
 	agentBuilder := NewAgentBuilder(b.DB, b.Config, agentGroup)
 	agentBuilder.BuildScheme()

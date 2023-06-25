@@ -59,3 +59,23 @@ type Agent struct {
 	City      City      `gorm:"foreignKey:CityID" json:"city"`
 	common.WithTimestampsModel
 }
+
+type SewingAgent struct {
+	ID                uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	ProductionHouseID uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_production_house_id;not null;" json:"production_house_id"`
+	Name              string    `gorm:"type:varchar(255);not null;" json:"name"`
+	Phone             string    `gorm:"type:varchar(25);not null;" json:"phone"`
+	Address           string    `gorm:"type:text" json:"address"`
+	common.WithTimestampsModel
+	ProductionHouse ProductionHouse `gorm:"foreignKey:ProductionHouseID" json:"production_house"`
+}
+
+type PrintingAgent struct {
+	ID                uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	ProductionHouseID uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_production_house_id;not null;" json:"production_house_id"`
+	Name              string    `gorm:"type:varchar(255);not null;" json:"name"`
+	Phone             string    `gorm:"type:varchar(25);not null;" json:"phone"`
+	Address           string    `gorm:"type:text" json:"address"`
+	common.WithTimestampsModel
+	ProductionHouse ProductionHouse `gorm:"foreignKey:ProductionHouseID" json:"production_house"`
+}

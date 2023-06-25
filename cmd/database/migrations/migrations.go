@@ -11,6 +11,8 @@ func prepareTable() []interface{} {
 		&City{},
 		&ProductionHouse{},
 		&Agent{},
+		&SewingAgent{},
+		&PrintingAgent{},
 	}
 }
 func Migrate(db *gorm.DB) {

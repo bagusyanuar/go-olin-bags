@@ -1,8 +1,8 @@
-package agent
+package productionhouse
 
 import (
-	request "github.com/bagusyanuar/go-olin-bags/app/http/request/agent"
-	repository "github.com/bagusyanuar/go-olin-bags/app/repositories/agent"
+	request "github.com/bagusyanuar/go-olin-bags/app/http/request/production-house"
+	repository "github.com/bagusyanuar/go-olin-bags/app/repositories/production-house"
 	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/bagusyanuar/go-olin-bags/model"
