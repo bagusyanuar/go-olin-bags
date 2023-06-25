@@ -1,6 +1,7 @@
 package builder
 
 import (
+	. "github.com/bagusyanuar/go-olin-bags/app/http/middleware"
 	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -19,11 +20,24 @@ func NewBuilder(db *gorm.DB, cfg *config.Config) Builder {
 }
 
 func (b *Builder) Build(server *gin.Engine) {
+
+	middleware := NewAuthMiddleware(&b.Config.JWT)
+
 	api := server.Group("/api/v1")
+	//endpoint group for public
 	publicGroup := api.Group("/")
+
+	//endpoint group for admin with auth middleware
 	adminGroup := api.Group("/admin")
+	adminGroup.Use(middleware.IsAuth())
+
+	//endpoint group for production house with auth middleware
 	productionHouseGroup := api.Group("/production-house")
+	// productionHouseGroup.Use(middleware.IsAuth())
+
+	//endpoint group for agent with auth middleware
 	agentGroup := api.Group("/agent")
+	agentGroup.Use(middleware.IsAuth())
 
 	publicBuilder := NewPublicBuilder(b.DB, b.Config, publicGroup)
 	publicBuilder.BuildScheme()
@@ -31,7 +45,7 @@ func (b *Builder) Build(server *gin.Engine) {
 	adminBuilder := NewAdminBuilder(b.DB, b.Config, adminGroup)
 	adminBuilder.BuildScheme()
 
-	productionHouseBuilder := NewProductionHouseBuilder(b.DB, b.Config, productionHouseGroup)
+	productionHouseBuilder := NewProductionHouseBuilder(b.DB, b.Config, productionHouseGroup, middleware)
 	productionHouseBuilder.BuildScheme()
 
 	agentBuilder := NewAgentBuilder(b.DB, b.Config, agentGroup)

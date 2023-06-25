@@ -2,6 +2,7 @@ package builder
 
 import (
 	controller "github.com/bagusyanuar/go-olin-bags/app/http/controller/production-house"
+	"github.com/bagusyanuar/go-olin-bags/app/http/middleware"
 	repository "github.com/bagusyanuar/go-olin-bags/app/repositories/production-house"
 	service "github.com/bagusyanuar/go-olin-bags/app/service/production-house"
 	"github.com/bagusyanuar/go-olin-bags/common"
@@ -11,32 +12,40 @@ import (
 )
 
 type ProductionHouseBuilder struct {
-	Database *gorm.DB
-	Config   *config.Config
-	APIGroup *gin.RouterGroup
+	Database   *gorm.DB
+	Config     *config.Config
+	APIGroup   *gin.RouterGroup
+	Middleware middleware.AuthMiddleware
 }
 
 func NewProductionHouseBuilder(
 	database *gorm.DB,
 	config *config.Config,
 	apiGroup *gin.RouterGroup,
-) AgentBuilder {
-	return AgentBuilder{
-		Database: database,
-		Config:   config,
-		APIGroup: apiGroup,
+	middleware middleware.AuthMiddleware,
+) ProductionHouseBuilder {
+	return ProductionHouseBuilder{
+		Database:   database,
+		Config:     config,
+		APIGroup:   apiGroup,
+		Middleware: middleware,
 	}
 }
 
 func (b *ProductionHouseBuilder) BuildScheme() {
 	authRepository := repository.NewAuthRepository(b.Database)
+	profileRepository := repository.NewProfileRepository(b.Database)
+	sewingAgentRepository := repository.NewSewingAgentRepository(b.Database)
 
 	authService := service.NewAuthService(authRepository, b.Config.JWT)
+	sewingAgentService := service.NewSewingAgentService(sewingAgentRepository, profileRepository)
 
 	authController := controller.NewAuthController(authService, b.APIGroup)
+	sewingAgentController := controller.NewSewingAgentController(sewingAgentService, b.APIGroup, b.Middleware)
 
 	controllers := []any{
 		&authController,
+		&sewingAgentController,
 	}
 	common.RegisterRoutes(controllers...)
 }
