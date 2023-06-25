@@ -8,10 +8,30 @@ import (
 type Agent interface {
 	FindAll() ([]model.Agent, error)
 	FindByID(id string) (*model.Agent, error)
+	Create(entity model.Agent) (*model.Agent, error)
 }
 
 type AgentRepository struct {
 	Database *gorm.DB
+}
+
+// Create implements Agent.
+func (r *AgentRepository) Create(entity model.Agent) (*model.Agent, error) {
+	tx := r.Database.Begin()
+	defer func() {
+		if recover := recover(); recover != nil {
+			tx.Rollback()
+			return
+		}
+	}()
+	if err := tx.Omit("City").
+		Create(&entity).
+		Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	tx.Commit()
+	return &entity, nil
 }
 
 // FindByID implements Agent.

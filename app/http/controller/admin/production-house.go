@@ -2,6 +2,7 @@ package admin
 
 import (
 	"net/http"
+	"strconv"
 
 	request "github.com/bagusyanuar/go-olin-bags/app/http/request/admin"
 	service "github.com/bagusyanuar/go-olin-bags/app/service/admin"
@@ -27,8 +28,48 @@ func NewProductionHouseController(
 func (c *ProductionHouseController) RegisterRoutes() {
 	route := c.APIGroup.Group("/production-house")
 	{
+		route.GET("/", c.FindAll)
 		route.POST("/", c.Create)
+		route.GET("/:id", c.FindByID)
 	}
+}
+
+func (c *ProductionHouseController) FindAll(ctx *gin.Context) {
+	q := ctx.Query("q")
+	limit, _ := strconv.Atoi(ctx.Query("limit"))
+	offset, _ := strconv.Atoi(ctx.Query("offset"))
+	data, err := c.ProductionHouseService.FindAll(q, limit, offset)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "internal server error",
+			Data:    nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    data,
+	})
+}
+
+func (c *ProductionHouseController) FindByID(ctx *gin.Context) {
+	id := ctx.Param("id")
+	data, err := c.ProductionHouseService.FindByID(id)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: "internal server error",
+			Data:    nil,
+		})
+		return
+	}
+	ctx.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    data,
+	})
 }
 
 func (c *ProductionHouseController) Create(ctx *gin.Context) {

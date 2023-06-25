@@ -38,6 +38,8 @@ func customMessage(tag string) string {
 		return "Field must be ... character"
 	case "uuid4":
 		return "Field must be uuid string type"
+	case "e164":
+		return "Field must be formatted phone number +[code][subscriber number]"
 	}
 	return "unknown error"
 }

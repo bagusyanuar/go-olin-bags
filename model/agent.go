@@ -23,8 +23,8 @@ type Agent struct {
 	Longitude float64   `json:"longitude"`
 	Balance   float64   `json:"balance"`
 	common.WithTimestampsModel
-	User User `gorm:"foreignKey:UserID" json:"user"`
-	City City `gorm:"foreignKey:CityID" json:"city"`
+	User *User `gorm:"foreignKey:UserID" json:"user"`
+	City *City `gorm:"foreignKey:CityID" json:"city"`
 }
 
 func (agent *Agent) BeforeCreate(tx *gorm.DB) (err error) {

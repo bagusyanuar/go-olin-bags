@@ -39,7 +39,7 @@ func (b *AdminBuilder) BuildScheme() {
 	cityService := service.NewCityService(cityRepository)
 	productionHouseService := service.NewProductionHouseService(productionHouseRepository)
 
-	agentController := controller.NewAgentController(agentService)
+	agentController := controller.NewAgentController(agentService, b.APIGroup)
 	provinceController := controller.NewProvinceController(provinceService, b.APIGroup)
 	cityController := controller.NewCityController(cityService, b.APIGroup)
 	productionHouseController := controller.NewProductionHouseController(productionHouseService, b.APIGroup)

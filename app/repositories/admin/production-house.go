@@ -25,14 +25,6 @@ func (r *ProductionHouseRepository) Create(entity model.ProductionHouse) (*model
 		}
 	}()
 
-	// if err := tx.Omit(clause.Associations).
-	// 	Create(&entityUser).
-	// 	Error; err != nil {
-	// 	return err
-	// }
-
-	// user := entityUser
-	// entityProductionHouse.UserID = user.ID
 	if err := tx.Omit("City").
 		Create(&entity).
 		Error; err != nil {
