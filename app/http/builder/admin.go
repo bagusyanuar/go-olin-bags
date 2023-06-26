@@ -39,6 +39,7 @@ func (b *AdminBuilder) BuildScheme() {
 	cityRepository := repository.NewCityRepository(b.Database)
 	productionHouseRepository := repository.NewProductionHouseRepository(b.Database)
 	materialRepository := repository.NewMaterialRepository(b.Database)
+	itemRepository := repository.NewItemRepository(b.Database)
 
 	authService := service.NewAuthService(authRepository, b.Config.JWT)
 	agentService := service.NewAgentService(agentRepository)
@@ -46,6 +47,7 @@ func (b *AdminBuilder) BuildScheme() {
 	cityService := service.NewCityService(cityRepository)
 	productionHouseService := service.NewProductionHouseService(productionHouseRepository)
 	materialService := service.NewMaterialService(materialRepository)
+	itemService := service.NewItemService(itemRepository)
 
 	authController := controller.NewAuthController(authService, b.APIGroup)
 	agentController := controller.NewAgentController(agentService, b.APIGroup)
@@ -53,6 +55,7 @@ func (b *AdminBuilder) BuildScheme() {
 	cityController := controller.NewCityController(cityService, b.APIGroup)
 	productionHouseController := controller.NewProductionHouseController(productionHouseService, b.APIGroup)
 	materialController := controller.NewMaterialController(materialService, b.APIGroup, b.Middleware)
+	itemController := controller.NewItemController(itemService, b.APIGroup, b.Middleware)
 
 	controllers := []any{
 		&authController,
@@ -61,6 +64,7 @@ func (b *AdminBuilder) BuildScheme() {
 		&cityController,
 		&productionHouseController,
 		&materialController,
+		&itemController,
 	}
 	common.RegisterRoutes(controllers...)
 }

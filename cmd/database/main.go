@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/bagusyanuar/go-olin-bags/cmd/database/migrations"
+	"github.com/bagusyanuar/go-olin-bags/cmd/database/seeder"
 	"github.com/bagusyanuar/go-olin-bags/config"
 )
 
@@ -32,6 +33,9 @@ func main() {
 		migrations.Drop(db)
 		migrations.Migrate(db)
 		fmt.Println("successfully fresh database")
+	case "seed":
+		seeder.Seed(db)
+		fmt.Println("successfully seed database")
 	default:
 		fmt.Println("unknown command")
 		return
