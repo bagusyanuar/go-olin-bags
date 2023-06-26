@@ -33,14 +33,12 @@ type City struct {
 
 type ProductionHouse struct {
 	ID        uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
-	UserID    uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_user_id;not null;" json:"user_id"`
 	CityID    uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_city_id;not null" json:"city_id"`
 	Name      string    `gorm:"type:varchar(255);not null;" json:"name"`
 	Phone     string    `gorm:"type:varchar(25);not null;" json:"phone"`
 	Address   string    `gorm:"type:text" json:"address"`
 	Latitude  float64   `gorm:"type:decimal(10,8)" json:"latitude"`
 	Longitude float64   `gorm:"type:decimal(11,8)" json:"longitude"`
-	User      User      `gorm:"foreignKey:UserID" json:"user"`
 	City      City      `gorm:"foreignKey:CityID" json:"city"`
 	common.WithTimestampsModel
 }
@@ -91,7 +89,22 @@ type Item struct {
 	MaterialID  uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_material_id;not null;" json:"material_id"`
 	Name        string    `gorm:"type:varchar(255);not null;" json:"name"`
 	Description string    `gorm:"type:text" json:"description"`
-	Price       int64     `gorm:"type:bigint(20);default=0" json:"price"`
+	Price       uint64    `gorm:"type:bigint(20);default=0" json:"price"`
 	common.WithTimestampsModel
 	Material Material `gorm:"foreignKey:MaterialID" json:"material"`
+}
+
+type Purchasing struct {
+	ID                uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	PurchaserID       uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_purchasher_id;not null;" json:"purchaser_id"`
+	ProductionHouseID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_production_house_id;not null;" json:"production_house_id"`
+	PurchaseNumeber   string         `gorm:"type:varchar(255);not null;unique" json:"purchase_number"`
+	Date              datatypes.Date `gorm:"type:date" json:"date"`
+	SubTotal          uint64         `gorm:"type:bigint(20);default=0" json:"sub_total"`
+	Discount          uint64         `gorm:"type:bigint(20);default=0" json:"discount"`
+	Total             uint64         `gorm:"type:bigint(20);default=0" json:"total"`
+	Status            uint8          `gorm:"type:smallint(6);default=0" json:"status"`
+	common.WithTimestampsModel
+	Purchaser       User            `gorm:"foreignKey:PurchaserID" json:"purchaser"`
+	ProductionHouse ProductionHouse `gorm:"foreignKey:ProductionHouseID" json:"production_house"`
 }

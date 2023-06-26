@@ -17,21 +17,11 @@ type ProductionHouseRepository struct {
 
 // Create implements ProductionHouse.
 func (r *ProductionHouseRepository) Create(entity model.ProductionHouse) (*model.ProductionHouse, error) {
-	tx := r.Database.Begin()
-	defer func() {
-		if rcr := recover(); rcr != nil {
-			tx.Rollback()
-			return
-		}
-	}()
-
-	if err := tx.Omit("City").
+	if err := r.Database.Omit("City").
 		Create(&entity).
 		Error; err != nil {
-		tx.Rollback()
 		return nil, err
 	}
-	tx.Commit()
 	return &entity, nil
 }
 

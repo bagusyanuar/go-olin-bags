@@ -38,6 +38,8 @@ func (b *AdminBuilder) BuildScheme() {
 	provinceRepository := repository.NewProvinceReposiotry(b.Database)
 	cityRepository := repository.NewCityRepository(b.Database)
 	productionHouseRepository := repository.NewProductionHouseRepository(b.Database)
+	sewingAgentRepository := repository.NewSewingAgentRepository(b.Database)
+	printingAgentRepository := repository.NewPrintingAgentRepository(b.Database)
 	materialRepository := repository.NewMaterialRepository(b.Database)
 	itemRepository := repository.NewItemRepository(b.Database)
 
@@ -46,6 +48,8 @@ func (b *AdminBuilder) BuildScheme() {
 	provinceService := service.NewProvinceService(provinceRepository)
 	cityService := service.NewCityService(cityRepository)
 	productionHouseService := service.NewProductionHouseService(productionHouseRepository)
+	sewingAgentService := service.NewSewingAgentService(sewingAgentRepository)
+	printingAgentService := service.NewPrintingAgentService(printingAgentRepository)
 	materialService := service.NewMaterialService(materialRepository)
 	itemService := service.NewItemService(itemRepository)
 
@@ -54,6 +58,8 @@ func (b *AdminBuilder) BuildScheme() {
 	provinceController := controller.NewProvinceController(provinceService, b.APIGroup)
 	cityController := controller.NewCityController(cityService, b.APIGroup)
 	productionHouseController := controller.NewProductionHouseController(productionHouseService, b.APIGroup)
+	sewingAgentController := controller.NewSewingAgentController(sewingAgentService, b.APIGroup, b.Middleware)
+	printingAgentController := controller.NewPrintingAgentController(printingAgentService, b.APIGroup, b.Middleware)
 	materialController := controller.NewMaterialController(materialService, b.APIGroup, b.Middleware)
 	itemController := controller.NewItemController(itemService, b.APIGroup, b.Middleware)
 
@@ -63,6 +69,8 @@ func (b *AdminBuilder) BuildScheme() {
 		&provinceController,
 		&cityController,
 		&productionHouseController,
+		&sewingAgentController,
+		&printingAgentController,
 		&materialController,
 		&itemController,
 	}

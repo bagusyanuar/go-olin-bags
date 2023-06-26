@@ -10,7 +10,6 @@ import (
 
 type ProductionHouse struct {
 	ID        uuid.UUID `json:"id"`
-	UserID    uuid.UUID `json:"user_id"`
 	CityID    uuid.UUID `json:"city_id"`
 	Name      string    `json:"name"`
 	Phone     string    `json:"phone"`
@@ -18,7 +17,6 @@ type ProductionHouse struct {
 	Latitude  float64   `json:"latitude"`
 	Longitude float64   `json:"longitude"`
 	common.WithTimestampsModel
-	User *User `gorm:"foreignKey:UserID" json:"user"`
 	City *City `gorm:"foreignKey:CityID" json:"city"`
 }
 
