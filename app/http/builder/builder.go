@@ -27,11 +27,11 @@ func (b *Builder) Build(server *gin.Engine) {
 	//endpoint group for public
 	publicGroup := api.Group("/")
 
-	//endpoint group for admin with auth middleware
+	//endpoint group for admin
 	adminGroup := api.Group("/admin")
-	adminGroup.Use(middleware.IsAuth())
+	// adminGroup.Use(middleware.IsAuth())
 
-	//endpoint group for production house with auth middleware
+	//endpoint group for production house
 	productionHouseGroup := api.Group("/production-house")
 	// productionHouseGroup.Use(middleware.IsAuth())
 
@@ -42,7 +42,7 @@ func (b *Builder) Build(server *gin.Engine) {
 	publicBuilder := NewPublicBuilder(b.DB, b.Config, publicGroup)
 	publicBuilder.BuildScheme()
 
-	adminBuilder := NewAdminBuilder(b.DB, b.Config, adminGroup)
+	adminBuilder := NewAdminBuilder(b.DB, b.Config, adminGroup, middleware)
 	adminBuilder.BuildScheme()
 
 	productionHouseBuilder := NewProductionHouseBuilder(b.DB, b.Config, productionHouseGroup, middleware)

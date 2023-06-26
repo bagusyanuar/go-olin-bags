@@ -2,8 +2,6 @@ package builder
 
 import (
 	"github.com/bagusyanuar/go-olin-bags/app/http/controller"
-	"github.com/bagusyanuar/go-olin-bags/app/repositories"
-	"github.com/bagusyanuar/go-olin-bags/app/service"
 	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/bagusyanuar/go-olin-bags/config"
 	"github.com/gin-gonic/gin"
@@ -28,12 +26,10 @@ func NewPublicBuilder(
 	}
 }
 func (b *PublicBuilder) BuildScheme() {
-	authRepository := repositories.NewAuthRepository(b.Database)
-	authservice := service.NewAuthService(authRepository, b.Config.JWT)
-	authController := controller.NewAuthController(authservice, b.APIGroup)
+	welcomeController := controller.NewWelcomeController(b.Config)
 
 	controllers := []any{
-		&authController,
+		&welcomeController,
 	}
 	common.RegisterRoutes(controllers...)
 }

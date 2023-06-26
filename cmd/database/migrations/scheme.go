@@ -79,3 +79,19 @@ type PrintingAgent struct {
 	common.WithTimestampsModel
 	ProductionHouse ProductionHouse `gorm:"foreignKey:ProductionHouseID" json:"production_house"`
 }
+
+type Material struct {
+	ID   uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	Name string    `gorm:"type:varchar(255);not null;" json:"name"`
+	common.WithTimestampsModel
+}
+
+type Item struct {
+	ID          uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	MaterialID  uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_material_id;not null;" json:"material_id"`
+	Name        string    `gorm:"type:varchar(255);not null;" json:"name"`
+	Description string    `gorm:"type:text" json:"description"`
+	Price       int64     `gorm:"type:bigint(20);default=0" json:"price"`
+	common.WithTimestampsModel
+	Material Material `gorm:"foreignKey:MaterialID" json:"material"`
+}

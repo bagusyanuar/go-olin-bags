@@ -14,12 +14,12 @@ const (
 
 func PublicRoutes(
 	welcomeController *controller.WelcomeController,
-	AuthController *controller.AuthController,
+	// AuthController *controller.AuthController,
 ) []*common.Route {
 	return []*common.Route{
 		{Method: http.MethodGet, Path: "/", Handler: welcomeController.Index},
 		//route auth
-		{Method: http.MethodPost, Group: AuthPath, Path: "/sign-in", Handler: AuthController.SignIn},
+		// {Method: http.MethodPost, Group: AuthPath, Path: "/sign-in", Handler: AuthController.SignIn},
 	}
 }
 

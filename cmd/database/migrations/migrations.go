@@ -13,6 +13,8 @@ func prepareTable() []interface{} {
 		&Agent{},
 		&SewingAgent{},
 		&PrintingAgent{},
+		&Material{},
+		&Item{},
 	}
 }
 func Migrate(db *gorm.DB) {
