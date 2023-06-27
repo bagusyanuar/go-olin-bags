@@ -16,8 +16,7 @@ type User struct {
 	Password *string        `json:"password"`
 	Roles    datatypes.JSON `json:"roles"`
 	common.WithTimestampsModel
-	ProductionHouse *ProductionHouse `gorm:"foreignKey:UserID" json:"production_house"`
-	Agent           *Agent           `gorm:"foreignKey:UserID" json:"agent"`
+	Agent *Agent `gorm:"foreignKey:UserID" json:"agent"`
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {

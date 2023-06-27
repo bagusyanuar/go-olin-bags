@@ -95,16 +95,34 @@ type Item struct {
 }
 
 type Purchasing struct {
-	ID                uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
-	PurchaserID       uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_purchasher_id;not null;" json:"purchaser_id"`
-	ProductionHouseID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_production_house_id;not null;" json:"production_house_id"`
-	PurchaseNumeber   string         `gorm:"type:varchar(255);not null;unique" json:"purchase_number"`
-	Date              datatypes.Date `gorm:"type:date" json:"date"`
-	SubTotal          uint64         `gorm:"type:bigint(20);default=0" json:"sub_total"`
-	Discount          uint64         `gorm:"type:bigint(20);default=0" json:"discount"`
-	Total             uint64         `gorm:"type:bigint(20);default=0" json:"total"`
-	Status            uint8          `gorm:"type:smallint(6);default=0" json:"status"`
+	ID                  uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	PurchaserID         uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_purchasher_id;not null;" json:"purchaser_id"`
+	ProductionHouseID   uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_production_house_id;not null;" json:"production_house_id"`
+	AccessorID          uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_accessor_id;" json:"accessor_id"`
+	PurchaseNumber      string         `gorm:"type:varchar(255);not null;unique" json:"purchase_number"`
+	Date                datatypes.Date `gorm:"type:date" json:"date"`
+	ShippingDestination string         `gorm:"type:text" json:"shipping_destination"`
+	SubTotal            uint64         `gorm:"type:bigint(20);default=0" json:"sub_total"`
+	ShippingCost        uint64         `gorm:"type:bigint(20);default=0" json:"shipping_cost"`
+	Discount            uint64         `gorm:"type:bigint(20);default=0" json:"discount"`
+	Total               uint64         `gorm:"type:bigint(20);default=0" json:"total"`
+	Status              uint8          `gorm:"type:smallint(6);default=0" json:"status"`
 	common.WithTimestampsModel
 	Purchaser       User            `gorm:"foreignKey:PurchaserID" json:"purchaser"`
 	ProductionHouse ProductionHouse `gorm:"foreignKey:ProductionHouseID" json:"production_house"`
+	Accessor        User            `gorm:"foreignKey:AccessorID" json:"accessor"`
+}
+
+type PurchaseItem struct {
+	ID           uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	PurchasingID uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_purchasing_id;" json:"purchasing_id"`
+	PurchaserID  uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_purchasher_id;not null;" json:"purchaser_id"`
+	ItemID       uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_item_id;" json:"item_id"`
+	Price        uint64    `gorm:"type:bigint(20);default=0" json:"price"`
+	Qty          uint32    `gorm:"type:int(11);default=0" json:"qty"`
+	Total        uint64    `gorm:"type:bigint(20);default=0" json:"total"`
+	common.WithTimestampsModel
+	Purchasing Purchasing `gorm:"foreignKey:PurchasingID" json:"Purchasing"`
+	Purchaser  User       `gorm:"foreignKey:PurchaserID" json:"purchaser"`
+	Item       Item       `gorm:"foreignKey:ItemID" json:"item"`
 }

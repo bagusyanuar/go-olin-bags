@@ -15,14 +15,11 @@ func prepareTable() []interface{} {
 		&PrintingAgent{},
 		&Material{},
 		&Item{},
+		&Purchasing{},
+		&PurchaseItem{},
 	}
 }
 func Migrate(db *gorm.DB) {
-	// db.AutoMigrate(&User{})
-	// db.AutoMigrate(&Province{})
-	// db.AutoMigrate(&City{})
-	// db.AutoMigrate(&ProductionHouse{})
-	// db.AutoMigrate(&Agent{})
 	tables := prepareTable()
 	db.AutoMigrate(tables...)
 }
