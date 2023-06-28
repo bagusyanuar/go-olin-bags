@@ -13,7 +13,7 @@ import (
 type City interface {
 	FindAll(q string, limit, offset int) ([]model.City, error)
 	FindByID(id string) (*model.City, error)
-	Create(request request.CityRequest) error
+	Create(request request.CityRequest) (*model.City, error)
 	Patch(id string, request request.CityRequest) error
 	Delete(id string)
 }
@@ -23,10 +23,10 @@ type CityService struct {
 }
 
 // Create implements City.
-func (svc *CityService) Create(request request.CityRequest) error {
+func (svc *CityService) Create(request request.CityRequest) (*model.City, error) {
 	provinceID, err := uuid.Parse(request.ProvinceID)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	e := model.City{
 		ProvinceID: provinceID,

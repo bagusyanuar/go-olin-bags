@@ -12,7 +12,7 @@ import (
 type Province interface {
 	FindAll(q string, limit, offset int) ([]model.Province, error)
 	FindByID(id string) (*model.Province, error)
-	Create(request request.ProvinceRequest) error
+	Create(request request.ProvinceRequest) (*model.Province, error)
 	Patch(id string, request request.ProvinceRequest) error
 	Delete(id string)
 }
@@ -22,7 +22,7 @@ type ProvinceService struct {
 }
 
 // Create implements Province.
-func (svc *ProvinceService) Create(request request.ProvinceRequest) error {
+func (svc *ProvinceService) Create(request request.ProvinceRequest) (*model.Province, error) {
 	e := model.Province{
 		Name: cases.Title(language.Indonesian, cases.Compact).String(request.Name),
 		Code: request.Code,

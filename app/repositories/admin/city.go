@@ -9,7 +9,7 @@ import (
 type City interface {
 	FindAll(q string, limit, offset int) ([]model.City, error)
 	FindByID(id string) (*model.City, error)
-	Create(entity model.City) error
+	Create(entity model.City) (*model.City, error)
 }
 
 type CityRepository struct {
@@ -17,14 +17,14 @@ type CityRepository struct {
 }
 
 // Create implements City.
-func (r *CityRepository) Create(entity model.City) error {
+func (r *CityRepository) Create(entity model.City) (*model.City, error) {
 	if err := r.Database.
 		Omit(clause.Associations).
 		Create(&entity).
 		Error; err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return &entity, nil
 }
 
 // FindAll implements City.

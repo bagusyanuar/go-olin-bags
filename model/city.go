@@ -8,6 +8,10 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	CityTableName = "cities"
+)
+
 type City struct {
 	ID         uuid.UUID `json:"id"`
 	ProvinceID uuid.UUID `json:"province_id"`
@@ -25,5 +29,5 @@ func (city *City) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (City) TableName() string {
-	return common.CityTableName
+	return CityTableName
 }

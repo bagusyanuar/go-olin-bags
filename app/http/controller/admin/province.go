@@ -1,6 +1,8 @@
 package admin
 
 import (
+	"errors"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -8,6 +10,7 @@ import (
 	service "github.com/bagusyanuar/go-olin-bags/app/service/admin"
 	"github.com/bagusyanuar/go-olin-bags/common"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
 type ProvinceController struct {
@@ -36,7 +39,7 @@ func (c *ProvinceController) FindAll(ctx *gin.Context) {
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
-			Message: "bad request",
+			Message: fmt.Sprintf("internal server error (%s)", err.Error()),
 			Data:    nil,
 		})
 		return
@@ -52,9 +55,17 @@ func (c *ProvinceController) FindByID(ctx *gin.Context) {
 	id := ctx.Param("id")
 	data, err := c.ProvinceService.FindByID(id)
 	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			ctx.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
+				Code:    http.StatusNotFound,
+				Message: "data not found",
+				Data:    nil,
+			})
+			return
+		}
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
-			Message: "bad request",
+			Message: fmt.Sprintf("internal server error (%s)", err.Error()),
 			Data:    nil,
 		})
 		return
@@ -78,11 +89,11 @@ func (c *ProvinceController) Create(ctx *gin.Context) {
 		return
 	}
 
-	err := c.ProvinceService.Create(req)
+	data, err := c.ProvinceService.Create(req)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
-			Message: err.Error(),
+			Message: fmt.Sprintf("internal server error (%s)", err.Error()),
 			Data:    nil,
 		})
 		return
@@ -90,6 +101,6 @@ func (c *ProvinceController) Create(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, common.APIResponse{
 		Code:    http.StatusCreated,
 		Message: "success",
-		Data:    nil,
+		Data:    data,
 	})
 }

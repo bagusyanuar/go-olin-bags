@@ -17,7 +17,7 @@ type Purchasing struct {
 	ID                  uuid.UUID      `json:"id"`
 	PurchaserID         uuid.UUID      `json:"purchaser_id"`
 	ProductionHouseID   uuid.UUID      `json:"production_house_id"`
-	AccessorID          uuid.UUID      `json:"accessor_id"`
+	AccessorID          *uuid.UUID     `json:"accessor_id"`
 	PurchaseNumber      string         `json:"purchase_number"`
 	Date                datatypes.Date `json:"date"`
 	ShippingDestination string         `json:"shipping_destination"`

@@ -36,16 +36,20 @@ func (b *AgentBuilder) BuildScheme() {
 	authRepository := repository.NewAuthRepository(b.Database)
 	itemRepository := repository.NewItemRepository(b.Database)
 	purchaseItemRepository := repository.NewPurchaseItemRepository(b.Database)
+	purchasingRepository := repository.NewPurchasingRepository(b.Database)
 
 	authService := service.NewAuthService(authRepository, b.Config.JWT)
 	purchaseItemService := service.NewPurchaseItemService(purchaseItemRepository, itemRepository)
+	purchasingService := service.NewPurchasingService(purchasingRepository, purchaseItemRepository)
 
 	authController := controller.NewAuthController(authService, b.APIGroup)
 	purchaseItemController := controller.NewPurchaseItemController(purchaseItemService, b.APIGroup, b.Middleware)
+	purchasingController := controller.NewPurchasingController(purchasingService, b.APIGroup, b.Middleware)
 
 	controllers := []any{
 		&authController,
 		&purchaseItemController,
+		&purchasingController,
 	}
 	common.RegisterRoutes(controllers...)
 }

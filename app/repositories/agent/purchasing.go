@@ -7,7 +7,7 @@ import (
 )
 
 type Purchasing interface {
-	Checkout(accountID string, entity model.Purchasing) (*model.Purchasing, error)
+	Checkout(accountID string, entity model.Purchasing, carts []model.PurchaseItem) (*model.Purchasing, error)
 	List(accountID string, limit, offset int) ([]model.Purchasing, error)
 }
 
@@ -16,13 +16,29 @@ type PurchasingRepository struct {
 }
 
 // Checkout implements Purchasing.
-func (r *PurchasingRepository) Checkout(accountID string, entity model.Purchasing) (*model.Purchasing, error) {
-	if err := r.Database.
+func (r *PurchasingRepository) Checkout(accountID string, entity model.Purchasing, carts []model.PurchaseItem) (*model.Purchasing, error) {
+	tx := r.Database.Begin()
+	defer func() {
+		if recover := recover(); recover != nil {
+			tx.Rollback()
+			return
+		}
+	}()
+	if err := tx.
 		Omit(clause.Associations).
 		Create(&entity).
 		Error; err != nil {
+		tx.Rollback()
 		return nil, err
 	}
+
+	purchasingID := entity.ID
+
+	if err := tx.Model(&carts).Update("purchasing_id", purchasingID).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	tx.Commit()
 	return &entity, nil
 }
 

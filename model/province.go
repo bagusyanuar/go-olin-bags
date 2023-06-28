@@ -8,12 +8,16 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	ProvinceTableName = "provinces"
+)
+
 type Province struct {
 	ID   uuid.UUID `json:"id"`
 	Code string    `json:"code"`
 	Name string    `json:"name"`
-	City []City    `gorm:"foreignKey=ProvinceID" json:"cities"`
 	common.WithTimestampsModel
+	City []City `gorm:"foreignKey=ProvinceID" json:"cities"`
 }
 
 func (province *Province) BeforeCreate(tx *gorm.DB) (err error) {
@@ -24,5 +28,5 @@ func (province *Province) BeforeCreate(tx *gorm.DB) (err error) {
 }
 
 func (Province) TableName() string {
-	return common.ProvinceTableName
+	return ProvinceTableName
 }

@@ -8,14 +8,18 @@ import (
 
 // table name constant
 const (
-	UserTableName            = "users"
-	ProvinceTableName        = "provinces"
-	CityTableName            = "cities"
+	UserTableName = "users"
+
 	ProductionHouseTableName = "production_houses"
 )
 
 const (
-	DefaultLimit int = 5
+	DefaultLimit               int    = 5
+	CodeDateFormat             string = "20060102150405"
+	PurchasingOnWaiting        uint8  = 0
+	PurchasingOnWaitingPayment uint8  = 1
+	PurchasingOnPayment        uint8  = 2
+	PurchasingOnProcess        uint8  = 3
 )
 
 type WithTimestampsModel struct {

@@ -36,8 +36,8 @@ func (r *AgentRepository) Create(entity model.Agent) (*model.Agent, error) {
 
 // FindByID implements Agent.
 func (r *AgentRepository) FindByID(id string) (*model.Agent, error) {
-	var data *model.Agent
-	if err := r.Database.Debug().First(&data).Error; err != nil {
+	data := new(model.Agent)
+	if err := r.Database.Where("id = ?", id).First(&data).Error; err != nil {
 		return nil, err
 	}
 	return data, nil
@@ -46,7 +46,7 @@ func (r *AgentRepository) FindByID(id string) (*model.Agent, error) {
 // FindAll implements Agent.
 func (r *AgentRepository) FindAll() ([]model.Agent, error) {
 	var data []model.Agent
-	if err := r.Database.Debug().Find(&data).Error; err != nil {
+	if err := r.Database.Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil

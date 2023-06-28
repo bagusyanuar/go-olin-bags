@@ -10,7 +10,7 @@ import (
 type Province interface {
 	FindAll(q string, limit, offset int) ([]model.Province, error)
 	FindByID(id string) (*model.Province, error)
-	Create(entity model.Province) error
+	Create(entity model.Province) (*model.Province, error)
 	Patch(id string, entity model.Province) error
 	Delete(id string) error
 }
@@ -41,14 +41,14 @@ func (r *ProvinceRepository) Patch(id string, entity model.Province) error {
 }
 
 // Create implements Province.
-func (r *ProvinceRepository) Create(entity model.Province) error {
+func (r *ProvinceRepository) Create(entity model.Province) (*model.Province, error) {
 	if err := r.Database.
 		Omit(clause.Associations).
 		Create(&entity).
 		Error; err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+	return &entity, nil
 }
 
 // FindAll implements Province.
