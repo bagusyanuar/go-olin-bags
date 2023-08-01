@@ -9,10 +9,16 @@ type Agent interface {
 	FindAll() ([]model.Agent, error)
 	FindByID(id string) (*model.Agent, error)
 	Create(entity model.Agent) (*model.Agent, error)
+	Update()
 }
 
 type AgentRepository struct {
 	Database *gorm.DB
+}
+
+// Update implements Agent.
+func (*AgentRepository) Update() {
+	panic("unimplemented")
 }
 
 // Create implements Agent.
